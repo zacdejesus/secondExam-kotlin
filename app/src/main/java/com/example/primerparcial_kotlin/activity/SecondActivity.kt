@@ -26,7 +26,6 @@ class SecondActivity : AppCompatActivity() {
         val jokeText = findViewById<TextView>(R.id.textViewJoke)
         val buttonNavigate = findViewById<Button>(R.id.buttonNavigate)
 
-
         CoroutineScope(Dispatchers.IO).launch {
             val call = Retrofit.getRetrofit().create(ApiService::class.java).getJoke("jokes/random")
             val response = call.body()

@@ -3,6 +3,7 @@ package com.example.primerparcial_kotlin.activity
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -24,6 +25,12 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+
+        val buttonBack = findViewById<Button>(R.id.backButton)
+
+        buttonBack.setOnClickListener {
+            finish()
+        }
 
         val receivedBundle = intent.extras
         if (receivedBundle != null) {
