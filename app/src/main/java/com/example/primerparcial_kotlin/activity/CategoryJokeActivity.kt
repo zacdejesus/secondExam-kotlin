@@ -10,35 +10,33 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.primerparcial_kotlin.R
 import com.example.primerparcial_kotlin.interfaces.JokeActivityInterface
 import com.example.primerparcial_kotlin.models.Joke
-import com.example.primerparcial_kotlin.services.ApiService
-import com.example.primerparcial_kotlin.services.Retrofit
 import com.example.primerparcial_kotlin.viewModels.CategoryJokeViewModel
-import com.example.primerparcial_kotlin.viewModels.RandomJokeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 class CategoryJokeActivity : AppCompatActivity(), JokeActivityInterface {
 
     private lateinit var category: String
     private lateinit var viewModel: CategoryJokeViewModel
+    private lateinit var categoryJoke: TextView
+    private lateinit var categoryLabel: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categoryjoke)
-
+        val receivedBundle = intent.extras
         val buttonBack = findViewById<Button>(R.id.backButton)
+        categoryJoke = findViewById<TextView>(R.id.categoryJoke)
+        categoryLabel = findViewById<TextView>(R.id.categoryLabel)
+        category = receivedBundle?.getString("category").toString()
+
+        viewModel = ViewModelProvider(this)[CategoryJokeViewModel::class.java]
+        viewModel.listener = this
 
         buttonBack.setOnClickListener {
             finish()
         }
 
-        val receivedBundle = intent.extras
         if (receivedBundle != null) {
-            val category = receivedBundle.getString("category")
-
             if (category != null) {
-                viewModel = ViewModelProvider(this).get(CategoryJokeViewModel::class.java)
-                viewModel.listener = this
                 viewModel.getJokeByCategory(category)
             }
         }
@@ -46,8 +44,6 @@ class CategoryJokeActivity : AppCompatActivity(), JokeActivityInterface {
 
     override fun onSuccess(response: Joke) {
         runOnUiThread {
-            val categoryJoke = findViewById<TextView>(R.id.categoryJoke)
-            val categoryLabel = findViewById<TextView>(R.id.categoryLabel)
             categoryLabel.text = "Category: $category"
             categoryJoke.text = response.value
         }
